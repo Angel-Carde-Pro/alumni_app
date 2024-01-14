@@ -9,7 +9,7 @@ import { PostulacionesComponent } from './pages/postulaciones/postulaciones.comp
 import { VisualizarcvComponent } from './visualizarcv/visualizarcv.component';
 import { DetallescandidatoComponent } from './detallescandidato/detallescandidato.component';
 import { ParametrospreguntasComponent } from './parametrospreguntas/parametrospreguntas.component';
-
+import { GraficosComponent } from './graficos/graficos.component';
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   {path: 'login',component: LoginComponent},
@@ -19,7 +19,8 @@ const routes: Routes = [
   {path:'postulaciones',component:PostulacionesComponent},
   {path: 'curriculum',component:VisualizarcvComponent},
   {path: 'candidato-details',component:DetallescandidatoComponent},
-  {path:'parametros-preguntas', component:ParametrospreguntasComponent}
+  {path:'parametros-preguntas', component:ParametrospreguntasComponent},
+  {path:'graficos', component:GraficosComponent},
   
  // { path: 'register-provincias', component: RegistroProvinciasComponent}
 ];

@@ -12,7 +12,7 @@ import { VisualizarcvComponent } from './visualizarcv/visualizarcv.component';
 import { SlidebarComponent } from './modules/slidebar/slidebar.component';
 import { DetallescandidatoComponent } from './detallescandidato/detallescandidato.component';
 import { InitComponent } from './pages/init/init.component';
-
+import { GraficosComponent } from './graficos/graficos.component';
 
 @NgModule({
   declarations: [
@@ -26,11 +26,14 @@ import { InitComponent } from './pages/init/init.component';
    // RegistroProvinciasComponent
    SlidebarComponent,
    DetallescandidatoComponent,
-   InitComponent
+   InitComponent,
+   GraficosComponent,
+   
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+  
   ],
   providers: [],
   bootstrap: [AppComponent]
