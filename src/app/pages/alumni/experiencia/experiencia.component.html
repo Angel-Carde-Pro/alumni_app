@@ -73,7 +73,7 @@
                                         <span class="tx-danger">*</span></label>
                                     <input class="form-control" type="text" name="area_trabajo"
                                         placeholder="Ingrese la area de trabajo" id="area_trabajo"
-                                        [(ngModel)]="editarClicked ? experiencia.area_trabajo : experiencia.area_trabajo"
+                                        [(ngModel)]="editarClicked ? experienciaCarga.area_trabajo : experiencia.area_trabajo"
                                         required>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                                     class="table-action mg-r-10">
                                     <i class="fa-regular fa-pen-to-square" style="cursor: pointer;"></i>
                                 </a>
-                                <a (click)="onDeleteClick(experienciaItem.id!)" class="table-action ms-2 text-danger">
+                                <a (click)="onDeleteClick(experienciaItem.id)" class="table-action ms-2 text-danger">
                                     <i class="fa fa-trash" style="cursor: pointer;"></i>
                                 </a>
                             </td>

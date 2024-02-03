@@ -28,8 +28,16 @@ export class ExperienciaComponent {
 
   constructor(public bsModalRef: BsModalRef, private experienciaService: ExperienciaService) { }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
 
+  ngOnInit(): void {
+    this.obtenerCedula();
+    this.loadExperiencias();
+  }
+
+  setupDtOptions() {
     this.dtoptions = {
       pagingType: 'full_numbers',
       searching: true,
@@ -50,9 +58,6 @@ export class ExperienciaComponent {
       },
       lengthMenu: [10, 25, 50]
     };
-
-    this.obtenerCedula();
-    this.loadExperiencias();
   }
 
   loadExperiencias() {
@@ -71,7 +76,7 @@ export class ExperienciaComponent {
 
   createExperiencia() {
     this.experiencia.cedulaGraduado = this.cedula;
-
+    console.log('Cedula:', this.cedula);
     this.editarClicked = false;
 
     this.experienciaService.createExperiencia(this.experiencia).subscribe(
@@ -83,10 +88,12 @@ export class ExperienciaComponent {
       },
       error => {
         console.error('Error al crear la experiencia:', error);
-        this.mostrarSweetAlert(false, 'Hubo un error al intentar guardar la experiencia.');
+        // Muestra un mensaje de error en la interfaz de usuario
+        this.mostrarSweetAlert(false, 'Hubo un error al intentar guardar la experiencia. Por favor, verifica los detalles e intenta nuevamente.');
       }
     );
   }
+
 
   onEditarClick(id: number | undefined = 0): void {
     this.editarClicked = true;
@@ -153,7 +160,6 @@ export class ExperienciaComponent {
       const userData = JSON.parse(userDataString);
       this.cedula = userData.persona.cedula;
     }
-    console.log('Cédula del usuario:', this.cedula);
   }
 
   cerrarModal() {
