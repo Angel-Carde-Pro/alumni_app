@@ -78,6 +78,7 @@ export class ExperienciaComponent {
     this.experiencia.cedulaGraduado = this.cedula;
     console.log('Cedula:', this.cedula);
     this.editarClicked = false;
+    console.log('Experiencia:', this.experiencia);
 
     this.experienciaService.createExperiencia(this.experiencia).subscribe(
       experiencia => {

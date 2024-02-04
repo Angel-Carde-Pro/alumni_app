@@ -20,8 +20,9 @@ export class ExperienciaService {
   }
 
   createExperiencia(experience: Experiencia): Observable<Experiencia> {
-    return this.http.post<Experiencia>(this.urlEndPoint, experience, { headers: this.httpHeaders })
+    return this.http.post<Experiencia>(`${this.urlEndPoint}/create`, experience, { headers: this.httpHeaders })
   }
+  
 
   getExperienciaById(id: any): Observable<Experiencia> {
     return this.http.get<Experiencia>(`${this.urlEndPoint}/${id}`)
