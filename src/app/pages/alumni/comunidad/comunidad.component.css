@@ -636,7 +636,6 @@ thead tr th {
   display: none;
   position: absolute;
   top: 20%;
-  margin-left: 8px;
   padding: 18px 0;
   z-index: 20;
   min-width: 212px;
