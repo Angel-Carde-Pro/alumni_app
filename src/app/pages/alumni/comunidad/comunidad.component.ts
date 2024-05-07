@@ -28,6 +28,8 @@ export class ComunidadComponent {
   filteredGraduadosList: Graduado1[] = [];
   suggestions: Graduado1[] = [];
   searchTerm: string = '';
+  filtroNombre: string = 'Ninguno';
+  resulatadoNumber: number = 0;
 
   careerNameList: any[] = [];
   careerNameLists: { [idGraduado: number]: string[] } = {};
@@ -123,7 +125,12 @@ export class ComunidadComponent {
     this.suggestions = [];
   }
 
+  buscarBtn(event: Event): void {
+    this.suggestions = [];
+  }
+
   private mapGraduadoToSearchableObject(graduado: Graduado1): any {
+    const careerNames = this.careerNameLists[graduado.id!] || [];
     return {
       id: graduado.id,
       nombreUsuario: graduado.usuario.nombreUsuario,
@@ -138,7 +145,8 @@ export class ComunidadComponent {
       estadoCivil: graduado.estadoCivil,
       ciudad: graduado.ciudad.nombre,
       provincia: graduado.ciudad.provincia.nombre,
-      pais: graduado.ciudad.provincia.pais
+      pais: graduado.ciudad.provincia.pais,
+      carreras: careerNames.join(', ')
     };
   }
 

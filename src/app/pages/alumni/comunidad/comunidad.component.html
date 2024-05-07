@@ -115,13 +115,15 @@
         <div class="search-menu">
             <div class="search-bar">
                 <input type="text" class="form-control" placeholder="Buscar graduado..." [(ngModel)]="searchTerm"
-                    (input)="onSearchInput($event)">
-                    <ul class="container-suggestions" *ngIf="suggestions.length > 0">
-                        <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
-                            {{ suggestion.usuario.persona.primerNombre }} {{ suggestion.usuario.persona.apellidoPaterno }} - {{
-                            suggestion.ciudad.nombre }} - {{ suggestion.ciudad.provincia.nombre }} - {{ suggestion.ciudad.provincia.pais }}
-                        </li>
-                    </ul>
+                    (input)="onSearchInput($event)" (keyup.enter)="buscarBtn($event)">
+                <ul class="container-suggestions" *ngIf="suggestions.length > 0">
+                    <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+                        {{ suggestion.usuario.persona.primerNombre }} {{ suggestion.usuario.persona.apellidoPaterno }} -
+                        {{
+                        suggestion.ciudad.nombre }} - {{ suggestion.ciudad.provincia.nombre }} - {{
+                        suggestion.ciudad.provincia.pais }}
+                    </li>
+                </ul>
                 <button class="search-clear-button" *ngIf="searchTerm" (click)="clearSearchTerm()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -162,7 +164,7 @@
                     <div class='ui-dropdown'>
                         <button class='dd-button' (click)="openSelectedFilters()">
                             <span class='dd-button__text' id='filtros'>
-                                Filtrar Por:
+                                Filtrar Por: {{filtroNombre}}
                             </span>
                         </button>
                         <div class='ui-dropdown__content'>
@@ -186,26 +188,13 @@
                                                 </span>
                                             </a>
                                         </li>
-                                        <li class='ui-list__item' data-trigger='#filtros'>
-                                            <a class='ui-list__item-option'>
-                                                <span class='ui-list__item-text'>
-                                                    Ciudad
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li class='ui-list__item' data-trigger='#filtros'>
-                                            <a class='ui-list__item-option'>
-                                                <span class='ui-list__item-text'>
-                                                    Todas las opciones
-                                                </span>
-                                            </a>
-                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                    </div><input type="date" class="form-control" id="fecha_registro"
-                        placeholder="Ingrese la fecha de registro." formControlName="fechaRegistro" required>
+                        <input type="date" class="form-control" id="fecha_registro"
+                            placeholder="Ingrese la fecha de registro." formControlName="fechaRegistro" required>
+                    </div>
                 </div>
             </div>
             <div class='filters-bar__col'>
@@ -283,6 +272,7 @@
 
             <!-- VISTA EN CUADRICULA -->
             <div class="searched-jobs" *ngIf="!isTable">
+                <p class="mt-3"><b>Elementos encontrados:</b> {{resulatadoNumber}} </p>
                 <div class="job-cards">
                     <div class="job-card" *ngFor="let graduadoItem of filteredGraduadosList;">
                         <div class="perfil">

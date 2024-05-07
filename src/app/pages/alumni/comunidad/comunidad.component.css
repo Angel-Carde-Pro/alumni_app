@@ -495,10 +495,17 @@ thead tr th {
 }
 
 .filters-bar__reset-btn {
+  background: transparent;
   color: #009ee3;
   font-size: 0.875em;
   cursor: pointer;
   border-style: none;
+  transition: 100ms all ease-in;
+}
+
+.filters-bar__reset-btn:hover {
+  color: #04da00;
+  transform: translateY(-3px);
 }
 
 .filters-bar__reset-btn[disabled] {
@@ -680,7 +687,7 @@ thead tr th {
 
 .ui-list__item-option:focus,
 .ui-list__item-option:hover {
-  background: #f7f7f7;
+  background: #f1f1f1;
   color: #009ee3;
 }
 
@@ -697,7 +704,7 @@ thead tr th {
   padding: 0;
   margin: 0;
   max-height: 200px;
-  z-index: 1;
+  z-index: 999;
   border-end-end-radius: 10px;
   border-end-start-radius: 10px;
 }
