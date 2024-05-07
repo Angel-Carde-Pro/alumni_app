@@ -9,7 +9,8 @@ import { Persona } from '../../../data/model/persona';
 import { Provincia } from '../../../data/model/provincia';
 import { UserService } from '../../../data/service/UserService';
 import { CarreraService } from '../../../data/service/carrera.service';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs'; 
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-comunidad',
   templateUrl: './comunidad.component.html',
@@ -32,7 +33,6 @@ export class ComunidadComponent {
   filteredGraduadosList: Graduado1[] = [];
   suggestions: Graduado1[] = [];
   searchTerm: string = '';
-  filtroNombre: string = 'Ninguno';
   resulatadoNumber: number = 0;
 
   careerNameList: any[] = [];
@@ -46,23 +46,28 @@ export class ComunidadComponent {
   public filtersVisible: boolean = false;
 
   constructor(private graduadoService: GraduadoService, private userservice: UserService
-    ,private carreraService: CarreraService) { }
+    , private carreraService: CarreraService) { }
 
   ngOnInit(): void {
     this.loadData();
-    this.getCareerNames3(); 
+    this.getCareerNames3();
   }
+  
   getCareerNames3(): void {
     this.careerNames = this.carreraService.getCarrerasNombres();
   }
 
-  filterByCareer(): void {
-    
-}
+  applyFilters(): void {
 
-openCareerFilter(): void {
-  this.showCareerFilter = !this.showCareerFilter;
-}
+  }
+  
+  deleteFilters(): void {
+
+  }
+
+  openCareerFilter(): void {
+    this.showCareerFilter = !this.showCareerFilter;
+  }
 
 
   loadData() {

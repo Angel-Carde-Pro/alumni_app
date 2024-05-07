@@ -164,7 +164,7 @@
                     <div class='ui-dropdown'>
                         <button class='dd-button' (click)="openSelectedFilters()">
                             <span class='dd-button__text' id='filtros'>
-                                Filtrar Por: {{filtroNombre}}
+                                Filtrar Por:
                             </span>
                         </button>
                         <div class='ui-dropdown__content'>
@@ -181,25 +181,47 @@
                                                 </span>
                                             </a>
                                         </li>
-                                        <li class='ui-list__item' data-trigger='#filtros'>
+
+                                        <li class='ui-list__item__more-options'>
                                             <a class='ui-list__item-option'>
                                                 <span class='ui-list__item-text'>
                                                     Carrera
                                                 </span>
                                             </a>
+                                            <div class='ui-dropdown__content__indented-options'
+                                                *ngIf="(careerNames | async) as careers">
+                                                <ul class='ui-list__content__indented-options'>
+                                                    <li class='ui-list__item' data-trigger='#filtros'
+                                                        *ngFor="let career of careers">
+                                                        <a class='ui-list__item-option'>
+                                                            <span class='ui-list__item-text'>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="carrerFilter">
+                                                                    <label class="form-check-label" for="carrerFilter">
+                                                                        {{ career }}
+                                                                    </label>
+                                                                </div>
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <input type="date" class="form-control" id="fecha_registro"
-                            placeholder="Ingrese la fecha de registro." formControlName="fechaRegistro" required>
                     </div>
                 </div>
             </div>
             <div class='filters-bar__col'>
-                <button class='filters-bar__reset-btn'>
-                    Borrar filtros
+                <button (click)="applyFilters()" data-bs-toggle="modal" data-bs-target="#modalData"
+                    class="btn btn-label-primary btn-sm" style="height: 50px;">
+                    <i class="fa-solid fa-circle-check"></i> Aplicar filtros
+                </button>
+                <button (click)="deleteFilters()" data-bs-toggle="modal" data-bs-target="#modalData"
+                    class="btn btn-label-danger btn-sm ms-2" style="height: 50px;">
+                    <i class="fa-solid fa-eraser"></i> Borrar filtros
                 </button>
             </div>
         </div>
@@ -272,7 +294,7 @@
 
             <!-- VISTA EN CUADRICULA -->
             <div class="searched-jobs" *ngIf="!isTable">
-                <p class="mt-3"><b>Elementos encontrados:</b> {{resulatadoNumber}} </p>
+                <p class="mt-2"><b>Elementos encontrados:</b> {{resulatadoNumber}} </p>
                 <div class="job-cards">
                     <div class="job-card" *ngFor="let graduadoItem of filteredGraduadosList;">
                         <div class="perfil">
