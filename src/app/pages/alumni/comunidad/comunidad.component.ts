@@ -9,8 +9,12 @@ import { Persona } from '../../../data/model/persona';
 import { Provincia } from '../../../data/model/provincia';
 import { UserService } from '../../../data/service/UserService';
 import { CarreraService } from '../../../data/service/carrera.service';
-import { Observable } from 'rxjs'; 
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
+interface SelectionMap {
+  [key: string]: boolean;
+}
+
 @Component({
   selector: 'app-comunidad',
   templateUrl: './comunidad.component.html',
@@ -19,7 +23,6 @@ import { map } from 'rxjs/operators';
 export class ComunidadComponent {
   selectedGraduado: any;
   selectedCareer: string = '';
-  showCareerFilter: boolean = false;
   public careerNames!: Observable<string[]>;
   public urlImage: string = '';
   public rutaimagen: string = '';
@@ -33,7 +36,8 @@ export class ComunidadComponent {
   filteredGraduadosList: Graduado1[] = [];
   suggestions: Graduado1[] = [];
   searchTerm: string = '';
-  resulatadoNumber: number = 0;
+  resultadoNumber: number = 0;
+  selectedCareersMap: SelectionMap = {};
 
   careerNameList: any[] = [];
   careerNameLists: { [idGraduado: number]: string[] } = {};
@@ -44,31 +48,18 @@ export class ComunidadComponent {
 
   public isTable: boolean = false;
   public filtersVisible: boolean = false;
+  filtroFechaGraduacion: Date | null = null;
 
-  constructor(private graduadoService: GraduadoService, private userservice: UserService
-    , private carreraService: CarreraService) { }
+  constructor(
+    private graduadoService: GraduadoService,
+    private userservice: UserService,
+    private carreraService: CarreraService
+  ) { }
 
   ngOnInit(): void {
     this.loadData();
     this.getCareerNames3();
   }
-  
-  getCareerNames3(): void {
-    this.careerNames = this.carreraService.getCarrerasNombres();
-  }
-
-  applyFilters(): void {
-
-  }
-  
-  deleteFilters(): void {
-
-  }
-
-  openCareerFilter(): void {
-    this.showCareerFilter = !this.showCareerFilter;
-  }
-
 
   loadData() {
     const userId = localStorage.getItem('user_id');
@@ -76,11 +67,22 @@ export class ComunidadComponent {
       (result) => {
         this.graduadosList = result;
         this.filteredGraduadosList = result;
+        this.incrementarResultado(result.length);
         this.graduadosList.forEach((graduado) => {
           this.getCareerName(graduado.id);
         });
       },
     );
+  }
+
+  incrementarResultado(valorFinal: number) {
+    const interval = setInterval(() => {
+      if (this.resultadoNumber < valorFinal) {
+        this.resultadoNumber += 2;
+      } else {
+        clearInterval(interval);
+      }
+    }, 60);
   }
 
   openFilters(): void {
@@ -121,11 +123,18 @@ export class ComunidadComponent {
   }
 
   selectSuggestion(suggestion: Graduado1): void {
-    // Realiza la acción deseada con el graduado seleccionado
-    console.log('Graduado seleccionado:', suggestion);
-
+    // Asigna la sugerencia seleccionada al término de búsqueda
     this.searchTerm = `${suggestion.usuario.persona.primerNombre} ${suggestion.usuario.persona.apellidoPaterno}`;
 
+    // Filtra la lista de graduados según la sugerencia seleccionada
+    this.filteredGraduadosList = this.graduadosList.filter(graduado =>
+      graduado.id === suggestion.id
+    );
+
+    // Actualiza el número de resultados
+    this.resultadoNumber = this.filteredGraduadosList.length;
+
+    // Limpia las sugerencias
     this.suggestions = [];
   }
 
@@ -146,6 +155,8 @@ export class ComunidadComponent {
     this.searchTerm = '';
     this.updateFilteredGraduadosList();
     this.suggestions = [];
+
+    this.resultadoNumber = this.graduadosList.length;
   }
 
   buscarBtn(event: Event): void {
@@ -173,33 +184,40 @@ export class ComunidadComponent {
     };
   }
 
-  private mapGraduado(graduado: Graduado1): Graduado1 {
-    const usuario = new Usuario();
-    usuario.id = graduado.usuario.id;
-    usuario.clave = graduado.usuario.clave;
-    usuario.nombreUsuario = graduado.usuario.nombreUsuario;
-    usuario.estado = graduado.usuario.estado;
-    usuario.urlImagen = graduado.usuario.urlImagen;
-    usuario.persona = this.mapPersona(graduado.usuario.persona);
-    usuario.rutaImagen = graduado.usuario.rutaImagen;
-    usuario.rol = this.mapRol(graduado.usuario.rol);
+  startDate: Date | null = null;
+  endDate: Date | null = null;
 
-    const ciudad = new Ciudad();
-    ciudad.id = graduado.ciudad.id;
-    ciudad.nombre = graduado.ciudad.nombre;
-    ciudad.provincia = this.mapProvincia(graduado.ciudad.provincia);
+  getCareerNames3(): void {
+    this.careerNames = this.carreraService.getCarrerasNombres();
+  }
 
-    const graduadoMapped = new Graduado1();
-    graduadoMapped.id = graduado.id;
-    graduadoMapped.usuario = usuario;
-    graduadoMapped.ciudad = ciudad;
-    graduadoMapped.anioGraduacion = graduado.anioGraduacion;
-    graduadoMapped.emailPersonal = graduado.emailPersonal;
-    graduadoMapped.estadoCivil = graduado.estadoCivil;
-    graduadoMapped.rutaPdf = graduado.rutaPdf;
-    graduadoMapped.urlPdf = graduado.urlPdf;
+  applyFilters(): void {
+    this.openSelectedFilters();
 
-    return graduadoMapped;
+    console.log("Carreras seleccionadas:", this.selectedCareersMap);
+    this.filteredGraduadosList = this.graduadosList.filter(graduado => {
+      const careerNames = this.careerNameLists[graduado.id!] || [];
+      const graduationDate = new Date(graduado.anioGraduacion);
+
+      const hasSelectedCareer = Object.keys(this.selectedCareersMap).length === 0 ||
+        careerNames.some(career => this.selectedCareersMap[career]);
+      const isWithinDateRange = (this.startDate === null || graduationDate >= this.startDate) &&
+        (this.endDate === null || graduationDate <= this.endDate);
+
+      return hasSelectedCareer && isWithinDateRange;
+    });
+    this.resultadoNumber = this.filteredGraduadosList.length;
+  }
+
+
+  deleteFilters(): void {
+    this.openSelectedFilters();
+
+    this.selectedCareersMap = {};
+    this.startDate = null;
+    this.endDate = null;
+    this.filteredGraduadosList = [...this.graduadosList];
+    this.resultadoNumber = this.filteredGraduadosList.length;
   }
 
   getCareerName(idGraduado: any): void {
@@ -215,42 +233,6 @@ export class ComunidadComponent {
     console.log(idGraduado)
     console.log(careers);
     return careers.map(career => career[1]);
-  }
-
-  private mapPersona(persona: Persona): Persona {
-    const personaMapped = new Persona();
-    personaMapped.id = persona.id;
-    personaMapped.cedula = persona.cedula;
-    personaMapped.primerNombre = persona.primerNombre;
-    personaMapped.segundoNombre = persona.segundoNombre;
-
-    // Verifica que fechaNacimiento sea de tipo Date antes de asignarla
-    personaMapped.fechaNacimiento = persona.fechaNacimiento instanceof Date ? persona.fechaNacimiento : new Date(persona.fechaNacimiento);
-
-    personaMapped.telefono = persona.telefono;
-    personaMapped.apellidoPaterno = persona.apellidoPaterno;
-    personaMapped.apellidoMaterno = persona.apellidoMaterno;
-
-    return personaMapped;
-  }
-
-
-  private mapRol(rol: Rol): Rol {
-    const rolMapped = new Rol();
-    rolMapped.id = rol.id;
-    rolMapped.nombre = rol.nombre;
-    rolMapped.descripcion = rol.descripcion;
-
-    return rolMapped;
-  }
-
-  private mapProvincia(provincia: Provincia): Provincia {
-    const provinciaMapped = new Provincia();
-    provinciaMapped.id = provincia.id;
-    provinciaMapped.nombre = provincia.nombre;
-    provinciaMapped.pais = provincia.pais;
-
-    return provinciaMapped;
   }
 
   loadUserDataByUsername() {
@@ -285,5 +267,4 @@ export class ComunidadComponent {
     const enlaceWhatsapp = `https://wa.me/${numeroConCodigoPais}?text=${encodeURIComponent(mensaje)}`;
     window.open(enlaceWhatsapp, "_blank");
   }
-
 }

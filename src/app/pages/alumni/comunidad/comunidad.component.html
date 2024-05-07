@@ -118,6 +118,8 @@
                     (input)="onSearchInput($event)" (keyup.enter)="buscarBtn($event)">
                 <ul class="container-suggestions" *ngIf="suggestions.length > 0">
                     <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+                        <img src="{{suggestion.usuario.urlImagen}}"
+                            style="width: 30px; height: 30px; object-fit: cover; border-radius: 8rem; margin: 10px 5px;" alt="Foto">
                         {{ suggestion.usuario.persona.primerNombre }} {{ suggestion.usuario.persona.apellidoPaterno }} -
                         {{
                         suggestion.ciudad.nombre }} - {{ suggestion.ciudad.provincia.nombre }} - {{
@@ -174,19 +176,47 @@
                                         Filtros
                                     </span>
                                     <ul class='ui-list__content'>
-                                        <li class='ui-list__item' data-trigger='#filtros'>
+                                        <li class='ui-list__item__more-options'>
                                             <a class='ui-list__item-option'>
-                                                <span class='ui-list__item-text'>
-                                                    Fecha - Año de graduación
-                                                </span>
+                                                <span class='ui-list__item-text'>Fecha - Año de graduación</span>
                                             </a>
+                                            <div class='ui-dropdown__content__indented-options'>
+                                                <ul class='ui-list__content__indented-options'
+                                                    style="display: flex; list-style-type: none; padding: 0;">
+                                                    <li class='ui-list__item' data-trigger='#filtros'
+                                                        style="flex: 1; margin-right: 10px;  margin-left: 10px;">
+                                                        <div class="form-group">
+                                                            <label class="form-label">FECHA INICIO:</label>
+                                                            <div class="input-group has-validation">
+                                                                <span class="input-group-text">
+                                                                    <i class="fa-regular fa-calendar-days"></i>
+                                                                </span>
+                                                                <input type="date" class="form-control"
+                                                                    [(ngModel)]="startDate">
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class='ui-list__item' data-trigger='#filtros'
+                                                        style="flex: 1; margin-left: 10px; margin-right: 10px; ">
+                                                        <div class="form-group">
+                                                            <label class="form-label">FECHA FIN:</label>
+                                                            <div class="input-group has-validation">
+                                                                <span class="input-group-text">
+                                                                    <i class="fa-regular fa-calendar-days"></i>
+                                                                </span>
+                                                                <input type="date" class="form-control"
+                                                                    [(ngModel)]="endDate">
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
                                         </li>
 
                                         <li class='ui-list__item__more-options'>
                                             <a class='ui-list__item-option'>
-                                                <span class='ui-list__item-text'>
-                                                    Carrera
-                                                </span>
+                                                <span class='ui-list__item-text'>Carrera</span>
                                             </a>
                                             <div class='ui-dropdown__content__indented-options'
                                                 *ngIf="(careerNames | async) as careers">
@@ -196,10 +226,11 @@
                                                         <a class='ui-list__item-option'>
                                                             <span class='ui-list__item-text'>
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" value="" id="carrerFilter">
-                                                                    <label class="form-check-label" for="carrerFilter">
-                                                                        {{ career }}
-                                                                    </label>
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        [(ngModel)]="selectedCareersMap[career]"
+                                                                        [id]="'carrer-' + career">
+                                                                    <label class="form-check-label"
+                                                                        [for]="'carrer-' + career">{{ career }}</label>
                                                                 </div>
                                                             </span>
                                                         </a>
@@ -294,7 +325,7 @@
 
             <!-- VISTA EN CUADRICULA -->
             <div class="searched-jobs" *ngIf="!isTable">
-                <p class="mt-2"><b>Elementos encontrados:</b> {{resulatadoNumber}} </p>
+                <p class="mt-2"><b>Graduados encontrados:</b> {{resultadoNumber}} </p>
                 <div class="job-cards">
                     <div class="job-card" *ngFor="let graduadoItem of filteredGraduadosList;">
                         <div class="perfil">
