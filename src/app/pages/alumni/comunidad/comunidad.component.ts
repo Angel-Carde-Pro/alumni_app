@@ -116,7 +116,7 @@ export class ComunidadComponent {
 
   updateSuggestions(): void {
     if (this.searchTerm.trim() !== '') {
-      this.suggestions = this.filteredGraduadosList.slice(0, 5);
+      this.suggestions = this.filteredGraduadosList.slice(0, 3);
     } else {
       this.suggestions = [];
     }
@@ -191,32 +191,45 @@ export class ComunidadComponent {
   }
 
   applyFilters(): void {
-    this.openSelectedFilters();
+    this.closeToggle();
 
     this.filteredGraduadosList = this.graduadosList.filter(graduado => {
       const graduationDate = new Date(graduado.anioGraduacion).getTime();
-
-      console.log("FECHA: " + this.startDate)
-      // Obtenemos el rango de fechas seleccionado por el usuario
       const startDate = this.startDate ? new Date(this.startDate).getTime() : null;
       const endDate = startDate ? new Date(startDate).setMonth(new Date(startDate).getMonth() + 1) : null;
-
-      // Verificamos si la fecha de graduación está dentro del rango seleccionado
       const isWithinDateRange = (startDate === null || graduationDate >= startDate) &&
         (endDate === null || graduationDate < endDate);
 
-      return isWithinDateRange;
+      const careerNames = this.careerNameLists[graduado.id!] || [];
+      const hasSelectedCareer = Object.keys(this.selectedCareersMap).length > 0;
+      const isCareerSelected = careerNames.some(career => this.selectedCareersMap[career]);
+
+      return isWithinDateRange && (!hasSelectedCareer || isCareerSelected);
     });
+
     this.resultadoNumber = this.filteredGraduadosList.length;
   }
 
-  deleteFilters(): void {
-    this.openSelectedFilters();
 
+
+  deleteFilters(): void {
+    this.closeToggle();
+
+    console.log("HOLAA")
     this.selectedCareersMap = {};
     this.startDate = null;
     this.filteredGraduadosList = [...this.graduadosList];
     this.resultadoNumber = this.filteredGraduadosList.length;
+  }
+
+  closeToggle(): void {
+    const filtersToggle = document.querySelector('.ui-dropdown__content');
+
+    if (filtersToggle) {
+      if (filtersToggle.classList.contains('active')) {
+        filtersToggle.classList.toggle('active');
+      }
+    }
   }
 
   getCareerName(idGraduado: any): void {
