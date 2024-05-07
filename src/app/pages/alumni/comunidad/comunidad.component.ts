@@ -37,14 +37,14 @@ export class ComunidadComponent {
 
   careerNameList: any[] = [];
   careerNameLists: { [idGraduado: number]: string[] } = {};
-
+  filtroFechaGraduacion: Date | null = null;
   graduado: Graduado1 = { id: 0, usuario: new Usuario(), ciudad: new Ciudad(), anioGraduacion: new Date(), emailPersonal: '', estadoCivil: '', rutaPdf: '', urlPdf: '' };
 
   graduadosList: Graduado1[] = [];
 
   public isTable: boolean = false;
   public filtersVisible: boolean = false;
-
+  showGraduationDateInput: boolean = false;
   constructor(private graduadoService: GraduadoService, private userservice: UserService
     ,private carreraService: CarreraService) { }
 
@@ -52,6 +52,17 @@ export class ComunidadComponent {
     this.loadData();
     this.getCareerNames3(); 
   }
+
+  toggleGraduationDateInput(): void {
+    this.showGraduationDateInput = !this.showGraduationDateInput;
+  }
+  
+  onGraduationDateChange(event: Event): void {
+  const target = event.target as HTMLInputElement;
+  const dateValue = target.value;
+  this.filterByGraduationDate(dateValue);
+}
+
   getCareerNames3(): void {
     this.careerNames = this.carreraService.getCarrerasNombres();
   }
@@ -77,6 +88,28 @@ openCareerFilter(): void {
       },
     );
   }
+
+  filterByGraduationDate(date: string): void {
+    if (!date) {
+      // Si la fecha está vacía, asigna la lista completa de graduados
+      this.filteredGraduadosList = this.graduadosList;
+      return; // Termina la ejecución del método
+    }
+  
+    // Convertir la fecha ingresada a un objeto Date
+    const selectedDate = new Date(date);
+  
+    // Filtrar la lista de graduados según la fecha de graduación
+    this.filteredGraduadosList = this.graduadosList.filter(graduado => {
+      // Convertir la fecha de graduación del graduado a un objeto Date
+      const graduationDate = new Date(graduado.anioGraduacion);
+  
+      // Comparar si la fecha de graduación coincide con la fecha ingresada
+      return graduationDate.toDateString() === selectedDate.toDateString();
+    });
+  }
+  
+  
 
   openFilters(): void {
     this.filtersVisible = !this.filtersVisible;

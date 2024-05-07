@@ -175,19 +175,38 @@
                                     </span>
                                     <ul class='ui-list__content'>
                                         <li class='ui-list__item' data-trigger='#filtros'>
-                                            <a class='ui-list__item-option'>
-                                                <span class='ui-list__item-text'>
-                                                    Fecha - Año de graduación
-                                                </span>
+                                            <a class='ui-list__item-option' (click)="toggleGraduationDateInput()">
+                                              <span class='ui-list__item-text'>
+                                                Fecha - Año de graduación
+                                              </span>
                                             </a>
-                                        </li>
-                                        <li class='ui-list__item' data-trigger='#filtros'>
+                                            <div *ngIf="showGraduationDateInput">
+                                                <input type="date" (change)="onGraduationDateChange($event)">
+
+
+                                            </div>
+                                          </li>
+                                          
+                                        <li class='ui-list__item' data-trigger='#filtros' (click)="openCareerFilter()">
                                             <a class='ui-list__item-option'>
-                                                <span class='ui-list__item-text'>
-                                                    Carrera
-                                                </span>
+                                              <span class='ui-list__item-text'>
+                                                Carrera
+                                              </span>
                                             </a>
-                                        </li>
+                                          </li>
+                                          
+                                          <div *ngIf="showCareerFilter">
+                                            <div *ngIf="(careerNames | async) as careers">
+                                              <ul>
+                                                <li *ngFor="let career of careers">
+                                                  <label>
+                                                    <input type="checkbox"> {{ career }}
+                                                  </label>
+                                                </li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                          
                                     </ul>
                                 </div>
                             </div>
