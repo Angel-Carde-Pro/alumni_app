@@ -28,14 +28,15 @@ export class ComunidadComponent {
 
   filteredGraduadosList: Graduado1[] = [];
 
-  // careerNameList: any[] = [];
-  // careerNameLists: { [idGraduado: number]: string[] } = {};
+  careerNameList: any[] = [];
+  careerNameLists: { [idGraduado: number]: string[] } = {};
 
   graduado: Graduado1 = { id: 0, usuario: new Usuario(), ciudad: new Ciudad(), anioGraduacion: new Date(), emailPersonal: '', estadoCivil: '', rutaPdf: '', urlPdf: '' };
 
   graduadosList: Graduado1[] = [];
 
   public isTable: boolean = false;
+  public filtersVisible: boolean = false;
 
   constructor(private graduadoService: GraduadoService, private userservice: UserService) { }
 
@@ -49,12 +50,33 @@ export class ComunidadComponent {
       (result) => {
         this.graduadosList = result;
         this.filteredGraduadosList = result;
-        // this.graduadosList.forEach((graduado) => {
-        //   this.getCareerName(graduado.id);
-        // });
+        this.graduadosList.forEach((graduado) => {
+          this.getCareerName(graduado.id);
+        });
       },
     );
   }
+
+  openFilters(): void {
+    this.filtersVisible = !this.filtersVisible;
+    const filtersToggle = document.querySelector('.filters-toggle');
+
+    if (filtersToggle) {
+      filtersToggle.classList.toggle('is-open');
+      filtersToggle.classList.remove('active');
+    }
+  } 
+  
+  openSelectedFilters(): void {
+    const filtersToggle = document.querySelector('.ui-dropdown__content');
+
+    console.log("lol");
+    if (filtersToggle) {
+      console.log("sasa");
+      filtersToggle.classList.toggle('active');
+    }
+  }
+
 
   toggleModeView(state: boolean): void {
     this.isTable = state;
@@ -72,7 +94,7 @@ export class ComunidadComponent {
       this.filteredGraduadosList = this.graduadosList;
     }
   }
-  
+
   clearSearchTerm(): void {
     this.searchTerm = '';
     this.updateFilteredGraduadosList();
@@ -96,6 +118,7 @@ export class ComunidadComponent {
       pais: graduado.ciudad.provincia.pais
     };
   }
+
   private mapGraduado(graduado: Graduado1): Graduado1 {
     const usuario = new Usuario();
     usuario.id = graduado.usuario.id;
@@ -125,20 +148,20 @@ export class ComunidadComponent {
     return graduadoMapped;
   }
 
-  // getCareerName(idGraduado: any): void {
-  //   this.graduadoService.getCareerListByGraduateId(idGraduado).subscribe(
-  //     (careerNames: string[]) => {
-  //       this.careerNameLists[idGraduado] = careerNames;
-  //     }
-  //   );
-  // }
+  getCareerName(idGraduado: any): void {
+    this.graduadoService.getCareerListByGraduateId(idGraduado).subscribe(
+      (careerNames: string[]) => {
+        this.careerNameLists[idGraduado] = careerNames;
+      }
+    );
+  }
 
-  // getCareerNames(idGraduado: any): string[] {
-  //   const careers = this.careerNameList.filter(career => career[0] === idGraduado);
-  //   console.log(idGraduado)
-  //   console.log(careers);
-  //   return careers.map(career => career[1]);
-  // }
+  getCareerNames(idGraduado: any): string[] {
+    const careers = this.careerNameList.filter(career => career[0] === idGraduado);
+    console.log(idGraduado)
+    console.log(careers);
+    return careers.map(career => career[1]);
+  }
 
   private mapPersona(persona: Persona): Persona {
     const personaMapped = new Persona();

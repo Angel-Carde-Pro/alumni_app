@@ -46,9 +46,7 @@
                             </div>
                             <div class="form-group col-lg-6">
                                 <label class="form-label" for="edad">Edad:</label>
-                                <input class="form-control" type="text" id="edad"
-                                    [value]="edad + ' años'" 
-                                    disabled>
+                                <input class="form-control" type="text" id="edad" [value]="edad + ' años'" disabled>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label class="form-label" for="correo">Correo:</label>
@@ -108,7 +106,7 @@
                 </button>
             </div>
             <button class="search-button">Buscar</button>
-            <button class='filters-toggle '> <!-- active -->
+            <button class='filters-toggle' (click)="openFilters()">
                 <span class='filters-toggle__text'>
                     <svg height='16' viewbox='0 0 14 16' width='14' xmlns='http://www.w3.org/2000/svg'>
                         <g fill-rule='evenodd' fill='none' id='UI' stroke-linecap='round' stroke-linejoin='round'>
@@ -119,6 +117,7 @@
                     Filtrar
                 </span>
             </button>
+
             <div class="content-menu_i">
                 <div class="item menu" (click)="toggleModeView(true)">
                     <div class="linee linee1" [class.white-background]="!isTable"></div>
@@ -136,8 +135,64 @@
                 </div>
             </div>
         </div>
+        <div class='filters-bar' *ngIf="filtersVisible">
+            <div class='filters-bar__dd-container filters-bar__col filters-bar__col--lg'>
+                <div class='filters-bar__col'>
+                    <div class='ui-dropdown'>
+                        <button class='dd-button' (click)="openSelectedFilters()">
+                            <span class='dd-button__text' id='filtros'>
+                                Filtrar Por:
+                            </span>
+                        </button>
+                        <div class='ui-dropdown__content'>
+                            <div class='ui-list ui-dropdown__options-list'>
+                                <div class='ui-list__group'>
+                                    <span class='ui-list__group-title'>
+                                        Filtros
+                                    </span>
+                                    <ul class='ui-list__content'>
+                                        <li class='ui-list__item' data-trigger='#filtros'>
+                                            <a class='ui-list__item-option'>
+                                                <span class='ui-list__item-text'>
+                                                    Fecha - Año de graduación
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class='ui-list__item' data-trigger='#filtros'>
+                                            <a class='ui-list__item-option'>
+                                                <span class='ui-list__item-text'>
+                                                    Carrera
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class='ui-list__item' data-trigger='#filtros'>
+                                            <a class='ui-list__item-option'>
+                                                <span class='ui-list__item-text'>
+                                                    Ciudad
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class='ui-list__item' data-trigger='#filtros'>
+                                            <a class='ui-list__item-option'>
+                                                <span class='ui-list__item-text'>
+                                                    Todas las opciones
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='filters-bar__col'>
+                <button class='filters-bar__reset-btn'>
+                    Borrar filtros
+                </button>
+            </div>
+        </div>
         <div class="main-container">
-
             <!-- VISTA EN MODO TABLA -->
             <div class="card-body collapse show collapse animate__animated animate__fadeIn animate__fast mt-3"
                 *ngIf="isTable">
@@ -207,7 +262,7 @@
                                 + " - " + graduadoItem.ciudad.provincia.nombre + " - " +
                                 graduadoItem.ciudad.provincia.pais}}</button>
                             <button class="search-buttons detail-button">{{graduadoItem.estadoCivil}}</button>
-                            <!-- <ng-container
+                            <ng-container
                                 *ngIf="graduadoItem.id && careerNameLists[graduadoItem.id]?.length; else noCareerNames">
                                 <button class="search-buttons detail-button"
                                     *ngFor="let careerName of careerNameLists[graduadoItem.id]">
@@ -215,7 +270,7 @@
                                         {{ careerName[1] }}
                                     </li>
                                 </button>
-                            </ng-container> -->
+                            </ng-container>
                             <ng-template #noCareerNames>
                                 <button class="search-buttons detail-button">No hay carreras asociadas</button>
                             </ng-template>

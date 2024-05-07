@@ -462,6 +462,240 @@ thead tr th {
   stroke: #009ee3;
 }
 
+.filters-bar {
+  margin: 1rem auto auto auto;
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  padding: 0.75em 1.5em 0.75em 1em;
+  background: var(--side-bg-color);
+  box-shadow: 0 0.07em 0.125em 0 rgba(0, 0, 0, 0.15);
+  border-radius: 4px 4px 0 0;
+}
+
+.content-filters {
+  margin-top: 1rem;
+  padding: 15px;
+  background: var(--side-bg-color);
+  border-radius: 4px;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+}
+
+.filters-bar__dd-container {
+  display: flex;
+  align-items: center;
+}
+
+.filters-bar__col {
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  margin-right: 1em;
+  display: flex;
+}
+
+.filters-bar__col:last-child {
+  margin: 0;
+}
+
+.filters-bar__col--lg {
+  flex-grow: 1;
+}
+
+.filters-bar__reset-btn {
+  color: #009ee3;
+  font-size: 0.875em;
+  cursor: pointer;
+  border-style: none;
+}
+
+.filters-bar__reset-btn[disabled] {
+  color: #999;
+  cursor: default;
+}
+
+.ui-dropdown {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.dd-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 1.86em;
+  padding-bottom: 0.125em;
+  font-family: Proxima Nova, Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.86em;
+  color: #666666;
+  cursor: pointer;
+  padding: 0 4px 0 6px;
+}
+
+.dd-button:focus {
+  outline: none;
+  box-shadow: 0px 0px 0px 3px rgba(0, 158, 227, 0.3);
+  border-radius: 4px;
+  -webkit-transition: 0.5s ease;
+  transition: 0.5s ease;
+}
+
+.dd-button:active {
+  background: #f2f2f2;
+  -webkit-transition: 0.18s ease;
+  transition: 0.18s ease;
+}
+
+.dd-button:active:focus {
+  border-bottom: none;
+}
+
+.dd-button.selected {
+  color: #009ee3;
+}
+
+.dd-button.selected .dd-button__text:after {
+  border-top: 1px solid #009ee3;
+  border-right: 1px solid #009ee3;
+}
+
+.dd-button.selected .dd-button__text:hover {
+  color: #009ee3;
+}
+
+.dd-button__text {
+  display: block;
+  position: relative;
+  padding-right: 20px;
+}
+
+.dd-button__text:after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  top: 7px;
+  right: 4px;
+  border-top: 1px solid #666;
+  border-right: 1px solid #666;
+  transform: rotate(135deg);
+  -webkit-transition: 0.18s ease;
+  transition: 0.18s ease;
+}
+
+.dd-button__text:hover {
+  color: #999;
+  -webkit-transition: 0.18s ease;
+  transition: 0.18s ease;
+}
+
+.dd-button__text:hover:after {
+  top: 8px;
+  border-top: 1px solid #999;
+  border-right: 1px solid #999;
+  -webkit-transition: 0.18s ease;
+  transition: 0.18s ease;
+}
+
+.dd-button__text:focus {
+  outline: none;
+}
+
+.ui-dropdown__content,
+.ui-dropdown__content__indented-options {
+  display: none;
+  position: absolute;
+  top: -4px;
+  left: 0;
+  padding: 4px 0;
+  z-index: 20;
+  min-width: 212px;
+  background: #fff;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 0.25em;
+  border-radius: 0.25em;
+  animation: dropdownactive 0.2s;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.ui-dropdown__content.active,
+.ui-dropdown__content__indented-options.active {
+  display: block;
+}
+
+.time-period .ui-dropdown__content {
+  left: inherit;
+  right: 0;
+}
+
+.ui-dropdown__content__indented-options {
+  left: 99%;
+}
+
+.ui-list__group.second {
+  margin-top: 0.5em;
+  padding-top: 0.5em;
+  border-top: 1px solid #f0f0f0;
+}
+
+.ui-list__group-title {
+  display: block;
+  padding: 0 1em;
+  line-height: 28px;
+  color: #999999;
+  font-size: 0.875em;
+  background: #fff;
+}
+
+.ui-list {
+  width: 100%;
+  font-size: inherit;
+}
+
+.ui-list__content {
+  padding: 0;
+  margin: 0;
+}
+
+.ui-list__item {
+  line-height: 28px;
+  text-align: initial;
+  position: relative;
+  list-style: none;
+}
+
+.ui-list__item-option {
+  display: block;
+  padding: 8px 2em;
+  color: #333;
+  background: #fff;
+  -webkit-transition: background 0.18s ease, border 0.18s ease;
+  transition: background 0.18s ease, border 0.18s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.ui-list__item-option:focus,
+.ui-list__item-option:hover {
+  background: #f7f7f7;
+  color: #009ee3;
+}
+
+.ui-list__item-text {
+  font-size: 14px;
+}
+
 @media screen and (max-width: 1212px) {
   .job-cards {
     grid-template-columns: repeat(2, 1fr);
