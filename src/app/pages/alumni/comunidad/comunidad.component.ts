@@ -8,6 +8,8 @@ import { Rol } from '../../../data/model/rol';
 import { Persona } from '../../../data/model/persona';
 import { Provincia } from '../../../data/model/provincia';
 import { UserService } from '../../../data/service/UserService';
+import { CarreraService } from '../../../data/service/carrera.service';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-comunidad',
   templateUrl: './comunidad.component.html',
@@ -15,7 +17,9 @@ import { UserService } from '../../../data/service/UserService';
 })
 export class ComunidadComponent {
   selectedGraduado: any;
-
+  selectedCareer: string = '';
+  showCareerFilter: boolean = false;
+  public careerNames!: Observable<string[]>;
   public urlImage: string = '';
   public rutaimagen: string = '';
   public graduadoid: number = 0;
@@ -39,11 +43,25 @@ export class ComunidadComponent {
   public isTable: boolean = false;
   public filtersVisible: boolean = false;
 
-  constructor(private graduadoService: GraduadoService, private userservice: UserService) { }
+  constructor(private graduadoService: GraduadoService, private userservice: UserService
+    ,private carreraService: CarreraService) { }
 
   ngOnInit(): void {
     this.loadData();
+    this.getCareerNames3(); 
   }
+  getCareerNames3(): void {
+    this.careerNames = this.carreraService.getCarrerasNombres();
+  }
+
+  filterByCareer(): void {
+    
+}
+
+openCareerFilter(): void {
+  this.showCareerFilter = !this.showCareerFilter;
+}
+
 
   loadData() {
     const userId = localStorage.getItem('user_id');
