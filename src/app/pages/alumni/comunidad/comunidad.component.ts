@@ -185,7 +185,6 @@ export class ComunidadComponent {
   }
 
   startDate: Date | null = null;
-  endDate: Date | null = null;
 
   getCareerNames3(): void {
     this.careerNames = this.carreraService.getCarrerasNombres();
@@ -194,28 +193,28 @@ export class ComunidadComponent {
   applyFilters(): void {
     this.openSelectedFilters();
 
-    console.log("Carreras seleccionadas:", this.selectedCareersMap);
     this.filteredGraduadosList = this.graduadosList.filter(graduado => {
-      const careerNames = this.careerNameLists[graduado.id!] || [];
-      const graduationDate = new Date(graduado.anioGraduacion);
+      const graduationDate = new Date(graduado.anioGraduacion).getTime();
 
-      const hasSelectedCareer = Object.keys(this.selectedCareersMap).length === 0 ||
-        careerNames.some(career => this.selectedCareersMap[career]);
-      const isWithinDateRange = (this.startDate === null || graduationDate >= this.startDate) &&
-        (this.endDate === null || graduationDate <= this.endDate);
+      console.log("FECHA: " + this.startDate)
+      // Obtenemos el rango de fechas seleccionado por el usuario
+      const startDate = this.startDate ? new Date(this.startDate).getTime() : null;
+      const endDate = startDate ? new Date(startDate).setMonth(new Date(startDate).getMonth() + 1) : null;
 
-      return hasSelectedCareer && isWithinDateRange;
+      // Verificamos si la fecha de graduación está dentro del rango seleccionado
+      const isWithinDateRange = (startDate === null || graduationDate >= startDate) &&
+        (endDate === null || graduationDate < endDate);
+
+      return isWithinDateRange;
     });
     this.resultadoNumber = this.filteredGraduadosList.length;
   }
-
 
   deleteFilters(): void {
     this.openSelectedFilters();
 
     this.selectedCareersMap = {};
     this.startDate = null;
-    this.endDate = null;
     this.filteredGraduadosList = [...this.graduadosList];
     this.resultadoNumber = this.filteredGraduadosList.length;
   }
