@@ -8,6 +8,13 @@
     overflow-x: hidden;
 }
 
+.title-page {
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--text-color);
+    transition: 250ms all ease-in-out;
+}
+
 a {
     text-decoration: none;
 }
@@ -296,5 +303,9 @@ main {
     #sidebar.hide+#content {
         width: 100%;
         left: 0px;
+    }
+
+    .title-page {
+        display: none;
     }
 }

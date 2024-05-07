@@ -22,11 +22,12 @@ export class ComunidadComponent {
   public idstring: string = '';
   public nombres: string = '';
   public apellidos: string = '';
-  searchTerm: string = '';
   edad: number = 0;
   fechaNacimiento: string = "";
 
   filteredGraduadosList: Graduado1[] = [];
+  suggestions: Graduado1[] = [];
+  searchTerm: string = '';
 
   careerNameList: any[] = [];
   careerNameLists: { [idGraduado: number]: string[] } = {};
@@ -65,21 +66,42 @@ export class ComunidadComponent {
       filtersToggle.classList.toggle('is-open');
       filtersToggle.classList.remove('active');
     }
-  } 
-  
+  }
+
   openSelectedFilters(): void {
     const filtersToggle = document.querySelector('.ui-dropdown__content');
 
-    console.log("lol");
     if (filtersToggle) {
-      console.log("sasa");
       filtersToggle.classList.toggle('active');
     }
   }
 
-
   toggleModeView(state: boolean): void {
     this.isTable = state;
+  }
+
+  onSearchInput(event: Event): void {
+    const inputValue = (event.target as HTMLInputElement).value;
+    this.searchTerm = inputValue;
+    this.updateFilteredGraduadosList();
+    this.updateSuggestions();
+  }
+
+  updateSuggestions(): void {
+    if (this.searchTerm.trim() !== '') {
+      this.suggestions = this.filteredGraduadosList.slice(0, 5);
+    } else {
+      this.suggestions = [];
+    }
+  }
+
+  selectSuggestion(suggestion: Graduado1): void {
+    // Realiza la acción deseada con el graduado seleccionado
+    console.log('Graduado seleccionado:', suggestion);
+
+    this.searchTerm = `${suggestion.usuario.persona.primerNombre} ${suggestion.usuario.persona.apellidoPaterno}`;
+
+    this.suggestions = [];
   }
 
   updateFilteredGraduadosList(): void {
@@ -98,6 +120,7 @@ export class ComunidadComponent {
   clearSearchTerm(): void {
     this.searchTerm = '';
     this.updateFilteredGraduadosList();
+    this.suggestions = [];
   }
 
   private mapGraduadoToSearchableObject(graduado: Graduado1): any {

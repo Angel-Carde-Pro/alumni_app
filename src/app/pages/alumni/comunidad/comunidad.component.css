@@ -48,24 +48,16 @@ thead tr th {
 
 .search-clear-button {
   position: absolute;
-  /* Agregado */
   right: 10px;
-  /* Agregado */
   top: 50%;
-  /* Agregado */
   transform: translateY(-50%);
-  /* Agregado */
   background: none;
-  /* Agregado */
   border: none;
-  /* Agregado */
   cursor: pointer;
-  /* Agregado */
 }
 
 .search-clear-button i {
   color: #555;
-  /* Cambia el color del icono según lo necesites */
 }
 
 .search-button {
@@ -694,6 +686,29 @@ thead tr th {
 
 .ui-list__item-text {
   font-size: 14px;
+}
+
+/* Contenedor de sugerencias */
+.container-suggestions {
+  position: relative;
+  background-color: var(--side-bg-color);
+  box-shadow: 0 0 3px rgb(0, 111, 201);
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  z-index: 1;
+  border-end-end-radius: 10px;
+  border-end-start-radius: 10px;
+}
+
+.container-suggestions li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.container-suggestions li:hover {
+  background-color: #f2f2f2;
 }
 
 @media screen and (max-width: 1212px) {

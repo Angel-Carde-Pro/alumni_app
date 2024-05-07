@@ -60,7 +60,8 @@
                             </div>
                             <div class="form-group col-lg-12">
                                 <label class="form-label" for="carreras">Carreras:</label>
-                                <ng-container *ngIf="selectedGraduado && careerNameLists[selectedGraduado.id]?.length; else noCareers">
+                                <ng-container
+                                    *ngIf="selectedGraduado && careerNameLists[selectedGraduado.id]?.length; else noCareers">
                                     <ul>
                                         <li *ngFor="let careerName of careerNameLists[selectedGraduado.id]">
                                             {{ careerName[1] }}
@@ -71,7 +72,7 @@
                                     No hay carreras asociadas
                                 </ng-template>
                             </div>
-                            
+
                             <!--<div class="text-center mt-auto">
                                     <label class="form-label">Título:</label>
                                     <div class="d-flex justify-content-center align-items-center">
@@ -114,7 +115,13 @@
         <div class="search-menu">
             <div class="search-bar">
                 <input type="text" class="form-control" placeholder="Buscar graduado..." [(ngModel)]="searchTerm"
-                    (input)="updateFilteredGraduadosList()">
+                    (input)="onSearchInput($event)">
+                    <ul class="container-suggestions" *ngIf="suggestions.length > 0">
+                        <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+                            {{ suggestion.usuario.persona.primerNombre }} {{ suggestion.usuario.persona.apellidoPaterno }} - {{
+                            suggestion.ciudad.nombre }} - {{ suggestion.ciudad.provincia.nombre }} - {{ suggestion.ciudad.provincia.pais }}
+                        </li>
+                    </ul>
                 <button class="search-clear-button" *ngIf="searchTerm" (click)="clearSearchTerm()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -197,7 +204,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div><input type="date" class="form-control" id="fecha_registro"
+                        placeholder="Ingrese la fecha de registro." formControlName="fechaRegistro" required>
                 </div>
             </div>
             <div class='filters-bar__col'>
@@ -238,18 +246,20 @@
                                 <td>{{ graduadoItem['anioGraduacion'] }} </td>
                                 <td>{{ graduadoItem.ciudad.nombre }} - {{graduadoItem.ciudad.provincia.nombre}} -
                                     {{graduadoItem.ciudad.provincia.pais}}</td>
-                                    <td>
-                                        <ng-container *ngIf="graduadoItem.id && careerNameLists[graduadoItem.id]?.length; else noCareerNames">
-                                            <span *ngFor="let careerName of careerNameLists[graduadoItem.id]; let last = last">
-                                                {{ careerName[1] }}
-                                                <span *ngIf="!last">, </span>
-                                            </span>
-                                        </ng-container>
-                                        <ng-template #noCareerNames>
-                                            No hay carreras asociadas
-                                        </ng-template>
-                                    </td>
-                                    
+                                <td>
+                                    <ng-container
+                                        *ngIf="graduadoItem.id && careerNameLists[graduadoItem.id]?.length; else noCareerNames">
+                                        <span
+                                            *ngFor="let careerName of careerNameLists[graduadoItem.id]; let last = last">
+                                            {{ careerName[1] }}
+                                            <span *ngIf="!last">, </span>
+                                        </span>
+                                    </ng-container>
+                                    <ng-template #noCareerNames>
+                                        No hay carreras asociadas
+                                    </ng-template>
+                                </td>
+
                                 <td>{{ graduadoItem.estadoCivil }}</td>
                                 <td class="text-center table-actions align-middle justify-content-center">
                                     <button (click)="showGraduadoDetails(graduadoItem)" data-bs-toggle="modal"
