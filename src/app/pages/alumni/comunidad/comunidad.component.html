@@ -58,6 +58,20 @@
                                 <input class="form-control" type="text" id="telefono"
                                     [value]="selectedGraduado?.usuario?.persona?.telefono" disabled>
                             </div>
+                            <div class="form-group col-lg-12">
+                                <label class="form-label" for="carreras">Carreras:</label>
+                                <ng-container *ngIf="selectedGraduado && careerNameLists[selectedGraduado.id]?.length; else noCareers">
+                                    <ul>
+                                        <li *ngFor="let careerName of careerNameLists[selectedGraduado.id]">
+                                            {{ careerName[1] }}
+                                        </li>
+                                    </ul>
+                                </ng-container>
+                                <ng-template #noCareers>
+                                    No hay carreras asociadas
+                                </ng-template>
+                            </div>
+                            
                             <!--<div class="text-center mt-auto">
                                     <label class="form-label">Título:</label>
                                     <div class="d-flex justify-content-center align-items-center">
@@ -206,6 +220,7 @@
                                 <th>TELEFONO</th>
                                 <th>FECHA DE GRADUACIÓN</th>
                                 <th>CIUDAD</th>
+                                <th>CARRERAS</th>
                                 <th>ESTADO CIVIL</th>
                                 <th class="text-center w-100px">Acciones</th>
                                 <th class="text-center w-100px">Contactar</th>
@@ -223,6 +238,18 @@
                                 <td>{{ graduadoItem['anioGraduacion'] }} </td>
                                 <td>{{ graduadoItem.ciudad.nombre }} - {{graduadoItem.ciudad.provincia.nombre}} -
                                     {{graduadoItem.ciudad.provincia.pais}}</td>
+                                    <td>
+                                        <ng-container *ngIf="graduadoItem.id && careerNameLists[graduadoItem.id]?.length; else noCareerNames">
+                                            <span *ngFor="let careerName of careerNameLists[graduadoItem.id]; let last = last">
+                                                {{ careerName[1] }}
+                                                <span *ngIf="!last">, </span>
+                                            </span>
+                                        </ng-container>
+                                        <ng-template #noCareerNames>
+                                            No hay carreras asociadas
+                                        </ng-template>
+                                    </td>
+                                    
                                 <td>{{ graduadoItem.estadoCivil }}</td>
                                 <td class="text-center table-actions align-middle justify-content-center">
                                     <button (click)="showGraduadoDetails(graduadoItem)" data-bs-toggle="modal"
