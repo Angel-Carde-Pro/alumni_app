@@ -41,6 +41,10 @@
                                     *ngIf="companyForm.get('ruc')?.hasError('pattern') && companyForm.get('ruc')?.touched">
                                     <strong>Dato Erróneo</strong> - Solo números y 13 caracteres.
                                 </div>
+                                <div class="oaerror danger"
+                                    *ngIf="companyForm.get('ruc')?.hasError('rucExists') && companyForm.get('ruc')?.touched">
+                                    <strong>Dato Erróneo</strong> - Ruc ya registrado.
+                                </div>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="nombre" class="form-label active">Nombre:*</label>
@@ -53,6 +57,10 @@
                                     <div class="oaerror danger invalid-feedback">
                                         <strong>Error</strong> - Por favor, ingrese el nombre.
                                     </div>
+                                </div>
+                                <div class="oaerror danger"
+                                    *ngIf="companyForm.get('nombre')?.hasError('nameExists') && companyForm.get('nombre')?.touched">
+                                    <strong>Dato Erróneo</strong> - Nombre ya registrado.
                                 </div>
                             </div>
 
@@ -163,6 +171,10 @@
                                         <strong>Error</strong> - Por favor, seleccione un sector empresarial.
                                     </div>
                                 </div>
+                                <div class="oaerror danger"
+                                    *ngIf="companyForm.get('sectorEmpresarial')?.hasError('required') && companyForm.get('sectorEmpresarial')?.touched">
+                                    <strong>Dato Erróneo</strong> - Solo números y 13 caracteres.
+                                </div>
                             </div>
 
 
@@ -245,7 +257,7 @@
 
                 <button (click)="onRegistrarClick()" data-bs-toggle="modal" data-bs-target="#modalData"
                     class="btn btn-primary ms-2" style="width: 15rem;">
-                    Registrar Oferta Laboral
+                    Registrar Empresa
                 </button>
             </div>
         </div>

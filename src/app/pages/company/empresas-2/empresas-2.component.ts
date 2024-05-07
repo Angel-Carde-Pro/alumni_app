@@ -89,8 +89,8 @@ export class Empresas2Component {
     private renderer: Renderer2
   ) {
     this.companyForm = this.fb.group({
-      nombre: ['', Validators.required],
-      ruc: ['', [Validators.required, Validators.pattern(ValidatorsUtil.patternRucValidator()), this.validateRuc()]],
+      nombre: ['', [Validators.required, this.validateUniqueName()]],
+      ruc: ['', [Validators.required, Validators.pattern(ValidatorsUtil.patternRucValidator()), this.validateRuc(), this.validateUniqueRuc()]],
       tipoEmpresa: ['', Validators.required],
       razonSocial: ['', Validators.required],
       area: ['', Validators.required],
@@ -402,6 +402,41 @@ export class Empresas2Component {
     return (control: AbstractControl): ValidationErrors | null => {
       const ruc = control.value;
       return !ruc ? null: this.validatorEc.validarRucSociedadPrivada(ruc) || this.validatorEc.validarRucPersonaNatural(ruc) || this.validatorEc.validarRucSociedadPublica(ruc) ? null : { invalidRuc: true };
+    };
+  }
+
+  validateUniqueRuc(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const ruc = control.value;
+
+      if (this.editarClicked) {
+        if (ruc) {
+          let empresa = this.empresas.find(e => e.ruc === ruc);
+          if (empresa?.ruc === ruc){
+            return null;
+          } else {
+            return !ruc ? null: this.empresas.find(e => e.ruc === ruc) ? { rucExists: true } : null;
+          }
+        }
+      }
+      return !ruc ? null: this.empresas.find(e => e.ruc === ruc) ? { rucExists: true } : null;
+    };
+  }
+
+  validateUniqueName(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const name = control.value;
+      if (this.editarClicked) {
+        if (name) {
+          let empresa = this.empresas.find(e => e.nombre === name);
+          if (empresa?.nombre === name){
+            return null;
+          } else {
+            return !name ? null: this.empresas.find(e => e.nombre === name) ? { nameExists: true } : null;
+          }
+        }
+      }
+      return !name ? null: this.empresas.find(e => e.nombre === name.toUpperCase()) ? { nameExists: true } : null;
     };
   }
 }

@@ -25,7 +25,7 @@ export class ValidatorsUtil {
     }
 
     static patternWebsiteValidator(): RegExp {
-        return /^(http|https):\/\/[^ "]+$/;
+        return /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/i;
     }
 
     static patternPeriodNameValidator(): RegExp {
