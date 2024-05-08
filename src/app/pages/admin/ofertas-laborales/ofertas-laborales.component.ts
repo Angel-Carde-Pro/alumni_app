@@ -46,7 +46,7 @@ export class OfertasLaboralesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    const columnTitles = ['#', 'Área de conocimiento', 'Cargo', 'Experiencia', 'Salario', 'Fecha de cierre', 'Fecha de publicación', 'Estado', 'Nombre de la empresa'];
+    const columnTitles = ['#', 'Área de conocimiento', 'Cargo', 'Experiencia', 'Salario', 'Fecha de cierre', 'Fecha de publicación', 'Estado', 'Nombre de la empresa','Sitio Web'];
     this.dtoptions = this.dtService.setupDtOptions(columnTitles, 'Buscar ofertas...');
     this.filterService.initializeDropdowns('filterTable', columnTitles,);
   }

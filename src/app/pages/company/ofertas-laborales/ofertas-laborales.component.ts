@@ -94,15 +94,19 @@ export class OfertasLaboralesComponent {
       nombreEmpresa: ['', [Validators.required]],
       tipo: ['', [Validators.required]],
       tiempo: ['', [Validators.required]],
+      sitioweb: ['', [Validators.required, Validators.pattern('^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$')]],
     });
   }
 
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
+ 
+  
+  
 
   ngOnInit(): void {
-    const columnTitles = ['#', 'Salario', 'Fecha de Publicación', 'Estado', 'Nombre de Empresa', 'Tipo'];
+    const columnTitles = ['#', 'Salario', 'Fecha de Publicación', 'Estado', 'Nombre de Empresa', 'Sitio web', 'Tipo'];
     this.dtoptions = this.dtService.setupDtOptions(columnTitles, 'Buscar oferta...');
     this.filterService.initializeDropdowns('filterTable', columnTitles,);
     this.loadData();
@@ -172,6 +176,7 @@ export class OfertasLaboralesComponent {
       tipo: 'estilo1',
       estado: 'EN REVISION',
       fechaPublicacion: [this.fechaPublicacion, Validators.required],
+      sitioweb: ['', [Validators.required, Validators.pattern('^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$')]],
     })
   }
 
@@ -220,6 +225,7 @@ export class OfertasLaboralesComponent {
         tiempo: dataToEdit.tiempo,
         fotoPortada: dataToEdit.fotoPortada,
         estado: dataToEdit.estado,
+        sitioweb: dataToEdit.sitioweb,
       });
 
       this.selectStyle();
@@ -307,6 +313,7 @@ export class OfertasLaboralesComponent {
       nombreEmpresa: [this.validateForm.value['nombreEmpresa'], Validators.required],
       tipo: [this.validateForm.value['tipo'], Validators.required],
       tiempo: [this.validateForm.value['tiempo'], Validators.required],
+      sitioweb: [this.validateForm.value['sitioweb'], [Validators.required, Validators.pattern('^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$')]],
     });
   }
 
@@ -321,6 +328,7 @@ export class OfertasLaboralesComponent {
       estado: [this.validateForm.value['estado'], Validators.required],
       tipo: [this.validateForm.value['tipo'], Validators.required],
       fotoPortada: [this.imageHandlerService.previsualizacion, Validators.required],
+      sitioweb: [this.validateForm.value['sitioweb'], [Validators.required, Validators.pattern('^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$')]],
     })
   }
 
@@ -331,6 +339,7 @@ export class OfertasLaboralesComponent {
       estado: [this.validateForm.value['estado'], Validators.required],
       tipo: [this.validateForm.value['tipo'], Validators.required],
       fotoPortada: [this.imageHandlerService.previsualizacion, Validators.required],
+      sitioweb: [this.validateForm.value['sitioweb'],[Validators.required, Validators.pattern('^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$')]],
     })
   }
 
@@ -361,6 +370,7 @@ export class OfertasLaboralesComponent {
     oferta.salario = this.validateForm.value['salario'];
     oferta.tipo = this.validateForm.value['tipo'];
     oferta.experiencia = this.validateForm.value['experiencia'];
+    oferta.sitioweb=this.validateForm.value['sitioweb'];
 
     return oferta;
   }
@@ -376,6 +386,7 @@ export class OfertasLaboralesComponent {
     oferta.tiempo = this.validateForm.value['tiempo'];
     oferta.tipo = this.validateForm.value['tipo'];
     oferta.fotoPortada = this.imageHandlerService.previsualizacion;
+    oferta.sitioweb=this.validateForm.value['sitioweb'];
 
     return oferta;
   }
@@ -387,7 +398,7 @@ export class OfertasLaboralesComponent {
     oferta.nombreEmpresa = this.validateForm.value['nombreEmpresa'];
     oferta.tipo = this.validateForm.value['tipo'];
     oferta.fotoPortada = this.imageHandlerService.previsualizacion;
-
+    oferta.sitioweb=this.validateForm.value['sitioweb'];
     return oferta;
   }
 

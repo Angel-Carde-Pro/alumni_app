@@ -36,7 +36,7 @@ export class OfertasDeTrabajoComponent implements OnInit {
   }
   
 
-  requestOffer(idOFerta: number): void {
+  requestOffer(idOFerta: number,sitioweb:string): void {
     let isPres: boolean = true;
 
     const idUser = localStorage.getItem('user_id');
@@ -52,6 +52,15 @@ export class OfertasDeTrabajoComponent implements OnInit {
         if (post) {
 
           this.alertService.mostrarAlertaMomentanea('Postulación realizada con éxito');
+          this.alertService.mostrarSweetAlertConfirmacion(`Se abrirá la siguiente página: ${sitioweb}`)
+          .then(() => {
+          
+            const newTab = window.open(sitioweb, '_blank');
+            
+            setTimeout(() => {
+              this.router.navigate(['system/alumni/postulaciones']);
+            }, 1000); 
+          });
 
           this.cargarOfertas(this.userId ? parseInt(this.userId) : 0);
         }

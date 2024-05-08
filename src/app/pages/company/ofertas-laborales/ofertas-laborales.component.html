@@ -138,7 +138,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group col-lg-12">
+                    <div class="form-group col-lg-6">
                         <label class="form-label active">ESTADO:</label>
                         <div class="input-group has-validation">
                             <a class="input-group-text">
@@ -151,6 +151,30 @@
                             </div>
                         </div>
                     </div>
+                    <div  class="form-group col-lg-6">
+                        <label class="form-label active" for="sitioweb">LINK:</label>
+                        <div class="input-group has-validation">
+                          
+                            <a class="input-group-text">
+                                <i class="fas fa-link"></i>
+                            </a>
+                            <input class="form-control" type="text" name="sitioweb" placeholder="Ingrese el sitioweb"
+                                id="sitioweb" formControlName="sitioweb" 
+                                [ngClass]="{ 'is-invalid': validateForm.get('sitioweb')?.invalid && (validateForm.get('sitioweb')?.dirty || validateForm.get('sitioweb')?.touched) }" required>
+                            <div class="oaerror danger invalid-feedback">
+                                <ng-container *ngIf="validateForm.get('sitioweb')?.errors?.['required']">
+                                    <strong>Dato Faltante</strong> - El sitio web de su capacitación es obligatorio.
+                                </ng-container>
+                    
+                                <ng-container *ngIf="validateForm.get('sitioweb')?.errors?.['pattern'] && validateForm.get('sitioweb')?.touched">
+                                    <strong>Formato Inválido</strong> - Solo se permite un sitio web válido con https.
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    
 
                     <div *ngIf="!showThirdStyle" class="form-group col-lg-12">
                         <label class="form-label active">ÁREA CONOCIMIENTO:</label>
@@ -309,6 +333,10 @@
                             <td>{{oferta.fechaPublicacion | date: 'yyyy-MM-dd HH:mm:ss' }} </td>
                             <td>{{ oferta.estado }} </td>
                             <td>{{ oferta.nombreEmpresa}}</td>
+                            <td>
+                                <a href="{{ oferta.sitioweb }}" target="_blank">{{ oferta.sitioweb }}</a>
+                            </td>
+                            
                             <td>{{ oferta.tipo === 'estilo1' ? 'ESTILO 1' : oferta.tipo === 'estilo2' ? 'ESTILO 2' :
                                 'ESTILO 3'
                                 }}</td>
