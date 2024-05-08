@@ -8,7 +8,7 @@
 </section>
 
 <!-- Nuevo Modal -->
-<div class="modal animate__animated animate__fadeInDown animate__faster" id="m_modal_4" tabindex="-1" role="dialog"
+<div class="modal fade" id="m_modal_4" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel_4" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -115,7 +115,7 @@
         <div class="search-menu">
             <div class="search-bar">
                 <input type="text" class="form-control" placeholder="Buscar graduado..." [(ngModel)]="searchTerm"
-                    (input)="onSearchInput($event)" (keyup.enter)="buscarBtn($event)">
+                    (input)="onSearchInput($event)" (keyup.enter)="buscarBtn()" [disabled]="filtersVisible">
                 <ul class="container-suggestions" *ngIf="suggestions.length > 0">
                     <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
                         <img src="{{suggestion.usuario.urlImagen}}"
@@ -165,11 +165,56 @@
             <div class='filters-bar__dd-container filters-bar__col filters-bar__col--lg'>
                 <div class='filters-bar__col'>
                     <div class='ui-dropdown'>
-                        <button class='dd-button' (click)="openSelectedFilters()">
-                            <span class='dd-button__text' id='filtros'>
-                                Filtrar Por:
-                            </span>
-                        </button>
+                        <div class="filters-column">
+                            <button class='dd-button' (click)="openSelectedFilters()">
+                                <span class='dd-button__text' id='filtros'>
+                                    Filtrar Por:
+                                </span>
+                            </button>
+                        
+                            <span *ngIf="filterStates['fechasGrado']" class="badge text-bg-dark mx-2 d-flex align-items-center" style="padding: 0.5rem 1rem; font-size: .8rem;">Año y mes de
+                                graduación:</span>
+                        
+                            <div class="input-group has-validation" *ngIf="filterStates['fechasGrado']">
+                                <span class="input-group-text">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </span>
+                                <input type="month" class="form-control" [(ngModel)]="startDate">
+                            </div>
+                            
+                            <span *ngIf="filterStates['carreras']" class="badge text-bg-dark mx-2 d-flex align-items-center"
+                                style="padding: 0.5rem 1rem; font-size: .8rem;"> Carreras:</span>
+                                
+                            <ng-multiselect-dropdown style="width: 40rem;" *ngIf="filterStates['carreras']" [placeholder]="'-- Seleccione una opción --'"
+                                [settings]="filterService.dropdownSettings['careersList']" [data]="filterService.dropdownLists['careersList']"
+                                [(ngModel)]="filterService.selectedItems['careersList']">
+                            </ng-multiselect-dropdown>
+                            
+                            <span *ngIf="filterStates['ciudades']" class="badge text-bg-dark mx-2 d-flex align-items-center"
+                                style="padding: 0.5rem 1rem; font-size: .8rem;"> Ciudades:</span>
+                                
+                            <ng-multiselect-dropdown style="width: 40rem;" *ngIf="filterStates['ciudades']"[placeholder]="'-- Seleccione una opción --'"
+                                [settings]="filterService.dropdownSettings['citiesList']" [data]="filterService.dropdownLists['citiesList']"
+                                [(ngModel)]="filterService.selectedItems['citiesList']">
+                            </ng-multiselect-dropdown>
+                            
+                            <span *ngIf="filterStates['provincias']" class="badge text-bg-dark mx-2 d-flex align-items-center"
+                                style="padding: 0.5rem 1rem; font-size: .8rem;"> Provincias:</span>
+                                
+                            <ng-multiselect-dropdown style="width: 40rem;" *ngIf="filterStates['provincias']"[placeholder]="'-- Seleccione una opción --'"
+                                [settings]="filterService.dropdownSettings['provincesList']" [data]="filterService.dropdownLists['provincesList']"
+                                [(ngModel)]="filterService.selectedItems['provincesList']">
+                            </ng-multiselect-dropdown>
+                            
+                            <span *ngIf="filterStates['paises']" class="badge text-bg-dark mx-2 d-flex align-items-center"
+                                style="padding: 0.5rem 1rem; font-size: .8rem;"> Países:</span>
+                                
+                            <ng-multiselect-dropdown style="width: 40rem;" *ngIf="filterStates['paises']"[placeholder]="'-- Seleccione una opción --'"
+                                [settings]="filterService.dropdownSettings['countriesList']" [data]="filterService.dropdownLists['countriesList']"
+                                [(ngModel)]="filterService.selectedItems['countriesList']">
+                            </ng-multiselect-dropdown>
+                        </div>
+
                         <div class='ui-dropdown__content'>
                             <div class='ui-list ui-dropdown__options-list'>
                                 <div class='ui-list__group'>
@@ -177,54 +222,44 @@
                                         Filtros
                                     </span>
                                     <ul class='ui-list__content'>
-                                        <li class='ui-list__item__more-options'>
+                                        <li class='ui-list__item' data-trigger='#filtros' (click)="filterClick('fechasGrado')">
                                             <a class='ui-list__item-option'>
-                                                <span class='ui-list__item-text'>Fecha - Año de graduación</span>
+                                                <span class='ui-list__item-text'>
+                                                    Año y mes de graduación
+                                                </span>
                                             </a>
-                                            <div class='ui-dropdown__content__indented-options'>
-                                                <ul class='ui-list__content__indented-options'
-                                                    style="display: flex; list-style-type: none; padding: 0;">
-                                                    <li class='ui-list__item' data-trigger='#filtros'
-                                                        style="flex: 1; margin-left: 10px; margin-right: 10px; ">
-                                                        <div class="form-group">
-                                                            <label class="form-label">AÑO Y MES DE GRADUACIÓN:</label>
-                                                            <div class="input-group has-validation">
-                                                                <span class="input-group-text">
-                                                                    <i class="fa-regular fa-calendar-days"></i>
-                                                                </span>
-                                                                <input type="month" class="form-control"
-                                                                    [(ngModel)]="startDate">
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
                                         </li>
 
-                                        <li class='ui-list__item__more-options'>
+                                        <li class='ui-list__item' data-trigger='#filtros' (click)="filterClick('carreras')">
                                             <a class='ui-list__item-option'>
-                                                <span class='ui-list__item-text'>Carrera</span>
+                                                <span class='ui-list__item-text'>
+                                                    Carreras
+                                                </span>
                                             </a>
-                                            <div class='ui-dropdown__content__indented-options'
-                                                *ngIf="(careerNames | async) as careers">
-                                                <ul class='ui-list__content__indented-options'>
-                                                    <li class='ui-list__item' data-trigger='#filtros'
-                                                        *ngFor="let career of careers">
-                                                        <a class='ui-list__item-option'>
-                                                            <span class='ui-list__item-text'>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        [(ngModel)]="selectedCareersMap[career]"
-                                                                        [id]="'carrer-' + career">
-                                                                    <label class="form-check-label"
-                                                                        [for]="'carrer-' + career">{{ career }}</label>
-                                                                </div>
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                        </li>
+                                        
+                                        <li class='ui-list__item' data-trigger='#filtros' (click)="filterClick('ciudades')">
+                                            <a class='ui-list__item-option'>
+                                                <span class='ui-list__item-text'>
+                                                    Ciudades
+                                                </span>
+                                            </a>
+                                        </li>
+                                        
+                                        <li class='ui-list__item' data-trigger='#filtros' (click)="filterClick('provincias')">
+                                            <a class='ui-list__item-option'>
+                                                <span class='ui-list__item-text'>
+                                                    Provincias
+                                                </span>
+                                            </a>
+                                        </li>
+                                        
+                                        <li class='ui-list__item' data-trigger='#filtros' (click)="filterClick('paises')">
+                                            <a class='ui-list__item-option'>
+                                                <span class='ui-list__item-text'>
+                                                    Países
+                                                </span>
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -244,10 +279,14 @@
                 </button>
             </div>
         </div>
+        <div *ngIf="anyResult" class="alert alert-primary mt-2" role="alert">
+            No se encontraron resultados
+        </div>
         <div class="main-container">
             <!-- VISTA EN MODO TABLA -->
-            <div class="card-body collapse show collapse animate__animated animate__fadeIn animate__fast mt-3"
+            <div class="card-body collapse show collapse animate__animated animate__fadeIn animate__fast mt-2"
                 *ngIf="isTable">
+                <p class="mt-2" *ngIf="!anyResult"><b>Graduados encontrados:</b> {{resultadoNumber}} </p>
                 <div class="table-responsive">
                     <table class="table table-bordered custom-table table-hover">
                         <thead>
@@ -265,8 +304,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let graduadoItem of filteredGraduadosList;">
-                                <th scope="row">{{ graduadoItem.id }}</th>
+                            <tr *ngFor="let graduadoItem of filteredGraduadosList; let i = index">
+                                <th scope="row">{{ i + 1 }}</th>
                                 <!-- <td>{{ graduadoItem.usuario.persona.primer_nombre + graduadoItem.usuario.persona.segundo_nombre }}</td> -->
                                 <td>{{ graduadoItem.usuario.persona.primerNombre }} {{
                                     graduadoItem.usuario.persona.segundoNombre}}</td>
@@ -313,7 +352,7 @@
 
             <!-- VISTA EN CUADRICULA -->
             <div class="searched-jobs" *ngIf="!isTable">
-                <p class="mt-2"><b>Graduados encontrados:</b> {{resultadoNumber}} </p>
+                <p class="mt-2" *ngIf="!anyResult"><b>Graduados encontrados:</b> {{resultadoNumber}} </p>
                 <div class="job-cards">
                     <div class="job-card" *ngFor="let graduadoItem of filteredGraduadosList;">
                         <div class="perfil">

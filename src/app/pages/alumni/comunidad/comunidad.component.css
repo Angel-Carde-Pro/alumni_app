@@ -459,7 +459,6 @@ thead tr th {
   width: 100%;
   z-index: 1;
   display: flex;
-  padding: 0.75em 1.5em 0.75em 1em;
   background: var(--side-bg-color);
   box-shadow: 0 0.07em 0.125em 0 rgba(0, 0, 0, 0.15);
   border-radius: 4px 4px 0 0;
@@ -514,6 +513,11 @@ thead tr th {
   transition: 100ms all ease-in;
 }
 
+.filters-column {
+  display: flex;
+  flex-direction: row;
+}
+
 .filters-bar__reset-btn:hover {
   color: #04da00;
   transform: translateY(-3px);
@@ -526,7 +530,6 @@ thead tr th {
 }
 
 .dd-button {
-  padding: 0;
   border: 0;
   background: none;
   display: -webkit-box;
@@ -538,13 +541,12 @@ thead tr th {
   -ms-flex-align: center;
   align-items: center;
   height: 1.86em;
-  padding-bottom: 0.125em;
-  font-family: Proxima Nova, Helvetica Neue, Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.86em;
   color: #666666;
   cursor: pointer;
   padding: 0 4px 0 6px;
+  min-width: 100px;
 }
 
 .dd-button:focus {
@@ -556,7 +558,7 @@ thead tr th {
 }
 
 .dd-button:active {
-  background: #f2f2f2;
+  background: var(--body-bg-color);
   -webkit-transition: 0.18s ease;
   transition: 0.18s ease;
 }
@@ -582,6 +584,8 @@ thead tr th {
   display: block;
   position: relative;
   padding-right: 20px;
+  -webkit-transition: 30ms ease;
+  transition: 30ms ease;
 }
 
 .dd-button__text:after {
@@ -589,25 +593,21 @@ thead tr th {
   width: 6px;
   height: 6px;
   position: absolute;
-  top: 7px;
+  top: 10px;
   right: 4px;
-  border-top: 1px solid #666;
-  border-right: 1px solid #666;
+  border-top: 2px solid #0088ff;
+  border-right: 2px solid #0088ff;
   transform: rotate(135deg);
-  -webkit-transition: 0.18s ease;
-  transition: 0.18s ease;
 }
 
 .dd-button__text:hover {
   color: #999;
-  -webkit-transition: 0.18s ease;
-  transition: 0.18s ease;
 }
 
 .dd-button__text:hover:after {
-  top: 8px;
-  border-top: 1px solid #999;
-  border-right: 1px solid #999;
+  top: 9px;
+  border-top: 2px solid #0062b8;
+  border-right: 2px solid #0062b8;
   -webkit-transition: 0.18s ease;
   transition: 0.18s ease;
 }
@@ -619,11 +619,11 @@ thead tr th {
 .ui-dropdown__content {
   display: none;
   position: absolute;
-  top: 3rem;
+  top: 2rem;
   padding: 4px 0;
   z-index: 20;
   min-width: 300px;
-  background: #fff;
+  background: var(--side-bg-color);
   -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   -webkit-border-radius: 0.25em;
@@ -638,8 +638,8 @@ thead tr th {
   top: 20%;
   padding: 18px 0;
   z-index: 20;
-  min-width: 212px;
-  background: #fff;
+  min-width: 260px;
+  background: var(--side-bg-color);
   -webkit-box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
   box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
   -webkit-border-radius: 0.25em;
@@ -689,9 +689,8 @@ thead tr th {
   display: block;
   padding: 0 1em;
   line-height: 28px;
-  color: #999999;
+  color: var(--text-color);
   font-size: 0.875em;
-  background: #fff;
 }
 
 .ui-list {
@@ -733,8 +732,7 @@ thead tr th {
 .ui-list__item-option {
   display: block;
   padding: 8px 2em;
-  color: #333;
-  background: #fff;
+  color: var(--text-color);
   -webkit-transition: background 0.18s ease, border 0.18s ease;
   transition: background 0.18s ease, border 0.18s ease;
   white-space: nowrap;
@@ -743,7 +741,7 @@ thead tr th {
 
 .ui-list__item-option:focus,
 .ui-list__item-option:hover {
-  background: #f1f1f1;
+  background: var(--filter-bg);
   color: #009ee3;
 }
 

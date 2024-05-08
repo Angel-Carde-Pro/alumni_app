@@ -1,19 +1,16 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { Graduado, Graduado1 } from '../../../data/model/graduado';
-import { Subject } from 'rxjs';
+import { Component } from '@angular/core';
+import { Graduado1 } from '../../../data/model/graduado';
 import { GraduadoService } from '../../../data/service/graduado.service';
 import { Usuario } from '../../../data/model/usuario';
 import { Ciudad } from '../../../data/model/ciudad';
-import { Rol } from '../../../data/model/rol';
-import { Persona } from '../../../data/model/persona';
-import { Provincia } from '../../../data/model/provincia';
 import { UserService } from '../../../data/service/UserService';
 import { CarreraService } from '../../../data/service/carrera.service';
 import { Observable } from 'rxjs';
+import { FiltersService } from '../../../data/Filters.service';
+import { CiudadService } from '../../../data/service/ciudad.service';
+import { CiudadDTO } from '../../../data/model/DTO/ciudadDTO';
+import { ProvinciaService } from '../../../data/service/provincia.service';
 
-interface SelectionMap {
-  [key: string]: boolean;
-}
 
 @Component({
   selector: 'app-comunidad',
@@ -22,7 +19,7 @@ interface SelectionMap {
 })
 export class ComunidadComponent {
   selectedGraduado: any;
-  selectedCareer: string = '';
+
   public careerNames!: Observable<string[]>;
   public urlImage: string = '';
   public rutaimagen: string = '';
@@ -37,7 +34,7 @@ export class ComunidadComponent {
   suggestions: Graduado1[] = [];
   searchTerm: string = '';
   resultadoNumber: number = 0;
-  selectedCareersMap: SelectionMap = {};
+  anyResult: boolean = false;
 
   careerNameList: any[] = [];
   careerNameLists: { [idGraduado: number]: string[] } = {};
@@ -46,19 +43,56 @@ export class ComunidadComponent {
 
   graduadosList: Graduado1[] = [];
 
+  dropdownSettings: any = {};
+
+  filterStates: { [key: string]: boolean } = {
+    'fechasGrado': false,
+    'carreras': false,
+    'ciudades': false,
+    'provincias': false,
+    'paises': false
+  };
+
   public isTable: boolean = false;
   public filtersVisible: boolean = false;
   filtroFechaGraduacion: Date | null = null;
 
   constructor(
     private graduadoService: GraduadoService,
-    private userservice: UserService,
-    private carreraService: CarreraService
+    public filterService: FiltersService,
+    private carreraService: CarreraService,
+    private ciudadService: CiudadService,
+    private provinciaService: ProvinciaService
   ) { }
 
   ngOnInit(): void {
     this.loadData();
     this.getCareerNames3();
+    this.getAllCities();
+    this.getAllProvinces();
+  }
+
+  getAllCities(): void {
+    this.ciudadService.getCiudadesDTO().subscribe(ciudades => {
+      const nombresCiudades = ciudades.map(ciudad => ciudad.nombre);
+
+      this.filterService.initializeDropdowns('citiesList', nombresCiudades, true);
+      this.filterService.selectedItems['citiesList'] = [];
+    });
+  }
+
+  getAllProvinces(): void {
+    this.provinciaService.getProvincias().subscribe(provincias => {
+      const nombresProvincias = provincias.map(provincia => provincia.nombre);
+      const nombresPaises = new Set(provincias.map(provincia => provincia.pais));
+
+      this.filterService.initializeDropdowns('provincesList', nombresProvincias, true);
+      this.filterService.initializeDropdowns('countriesList', Array.from(nombresPaises), true);
+
+
+      this.filterService.selectedItems['provincesList'] = [];
+      this.filterService.selectedItems['countriesList'] = [];
+    });
   }
 
   loadData() {
@@ -67,7 +101,9 @@ export class ComunidadComponent {
       (result) => {
         this.graduadosList = result;
         this.filteredGraduadosList = result;
+
         this.incrementarResultado(result.length);
+
         this.graduadosList.forEach((graduado) => {
           this.getCareerName(graduado.id);
         });
@@ -138,6 +174,19 @@ export class ComunidadComponent {
     this.suggestions = [];
   }
 
+
+  filterClick(value: string): void {
+    // Reinicia todos los filtros a false
+    for (const key in this.filterStates) {
+      this.filterStates[key] = false;
+    }
+
+    // Establece el filtro seleccionado en true
+    this.filterStates[value] = true;
+
+    this.closeToggle();
+  }
+
   updateFilteredGraduadosList(): void {
     if (this.searchTerm.trim() !== '') {
       this.filteredGraduadosList = this.graduadosList.filter(graduado => {
@@ -159,7 +208,7 @@ export class ComunidadComponent {
     this.resultadoNumber = this.graduadosList.length;
   }
 
-  buscarBtn(event: Event): void {
+  buscarBtn(): void {
     this.suggestions = [];
   }
 
@@ -186,41 +235,65 @@ export class ComunidadComponent {
 
   startDate: Date | null = null;
 
-  getCareerNames3(): void {
-    this.careerNames = this.carreraService.getCarrerasNombres();
-  }
-
   applyFilters(): void {
     this.closeToggle();
 
-    this.filteredGraduadosList = this.graduadosList.filter(graduado => {
-      const graduationDate = new Date(graduado.anioGraduacion).getTime();
-      const startDate = this.startDate ? new Date(this.startDate).getTime() : null;
-      const endDate = startDate ? new Date(startDate).setMonth(new Date(startDate).getMonth() + 1) : null;
-      const isWithinDateRange = (startDate === null || graduationDate >= startDate) &&
-        (endDate === null || graduationDate < endDate);
+    this.searchTerm = "";
+    this.updateFilteredGraduadosList();
 
-      const careerNames = this.careerNameLists[graduado.id!] || [];
-      const hasSelectedCareer = Object.keys(this.selectedCareersMap).length > 0;
-      const isCareerSelected = careerNames.some(career => this.selectedCareersMap[career]);
+    if (this.filterStates['fechasGrado']) {
+      this.filteredGraduadosList = this.graduadosList.filter(graduado => {
+        // Verificamos si la fecha de graduación está dentro del rango seleccionado
+        const graduationDate = new Date(graduado.anioGraduacion).getTime();
+        const startDate = this.startDate ? new Date(this.startDate).getTime() : null;
+        const endDate = startDate ? new Date(startDate).setMonth(new Date(startDate).getMonth() + 1) : null;
+        const result = (startDate === null || graduationDate >= startDate) &&
+          (endDate === null || graduationDate < endDate);
 
-      return isWithinDateRange && (!hasSelectedCareer || isCareerSelected);
-    });
+        return result;
+      });
+    } else if (this.filterStates['carreras']) {
+      this.filtrarDatoComun(this.filterService.selectedItems['careersList'].map(item => item.item_text).toString());
+    } else if (this.filterStates['ciudades']) {
+      this.filtrarDatoComun(this.filterService.selectedItems['citiesList'].map(item => item.item_text).toString());
+    } else if (this.filterStates['provincias']) {
+      this.filtrarDatoComun(this.filterService.selectedItems['provincesList'].map(item => item.item_text).toString());
+    } else if (this.filterStates['paises']) {
+      this.filtrarDatoComun(this.filterService.selectedItems['countriesList'].map(item => item.item_text).toString());
+    }
 
     this.resultadoNumber = this.filteredGraduadosList.length;
+    this.anyResult = this.filteredGraduadosList.length === 0;
   }
 
-
+  filtrarDatoComun(valueData: string): void {
+    this.filteredGraduadosList = this.graduadosList.filter(graduado => {
+      const graduadoPlano = this.mapGraduadoToSearchableObject(graduado);
+      return Object.values(graduadoPlano).some(value =>
+        (typeof value === 'string' && value.toLowerCase().includes(valueData.toLowerCase()))
+      );
+    });
+  }
 
   deleteFilters(): void {
     this.closeToggle();
-
-    console.log("HOLAA")
-    this.selectedCareersMap = {};
     this.startDate = null;
+    this.anyResult = false;
+
+    this.filterService.selectedItems['careersList'] = [];
+
+    this.filterService.selectedItems['citiesList'] = [];
+    this.filterService.selectedItems['provincesList'] = [];
+    this.filterService.selectedItems['countriesList'] = [];
+
+    this.filterClick('none');
+
     this.filteredGraduadosList = [...this.graduadosList];
+
+    // Actualizar el contador de resultados
     this.resultadoNumber = this.filteredGraduadosList.length;
   }
+
 
   closeToggle(): void {
     const filtersToggle = document.querySelector('.ui-dropdown__content');
@@ -230,6 +303,19 @@ export class ComunidadComponent {
         filtersToggle.classList.toggle('active');
       }
     }
+  }
+
+  getCareerNames3(): void {
+    this.careerNames = this.carreraService.getCarrerasNombres();
+
+    this.careerNames.subscribe(names => {
+      this.filterService.dropdownLists['careersList'] = names;
+
+      this.filterService.initializeDropdowns('careersList', this.filterService.dropdownLists['careersList'], true);
+
+
+      this.filterService.selectedItems['careersList'] = [];
+    });
   }
 
   getCareerName(idGraduado: any): void {
