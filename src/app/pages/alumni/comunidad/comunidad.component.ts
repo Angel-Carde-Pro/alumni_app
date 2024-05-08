@@ -125,6 +125,9 @@ export class ComunidadComponent {
     this.filtersVisible = !this.filtersVisible;
     const filtersToggle = document.querySelector('.filters-toggle');
 
+    this.searchTerm = "";
+    this.updateFilteredGraduadosList();
+    
     if (filtersToggle) {
       filtersToggle.classList.toggle('is-open');
       filtersToggle.classList.remove('active');
@@ -237,9 +240,6 @@ export class ComunidadComponent {
 
   applyFilters(): void {
     this.closeToggle();
-
-    this.searchTerm = "";
-    this.updateFilteredGraduadosList();
 
     if (this.filterStates['fechasGrado']) {
       this.filteredGraduadosList = this.graduadosList.filter(graduado => {
