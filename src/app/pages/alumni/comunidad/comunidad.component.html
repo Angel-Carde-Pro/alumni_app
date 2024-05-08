@@ -386,7 +386,7 @@
                             <button (click)="showGraduadoDetails(graduadoItem)" data-bs-toggle="modal"
                                 data-bs-target="#m_modal_4" class="search-buttons card-buttons"> Mas datos para
                                 Contactar</button>
-                            <button class="search-buttons card-buttons-msg">Contactar</button>
+                            <button class="search-buttons card-buttons-msg"  (click)="contactarPorWhatsapp(graduadoItem.usuario.persona.telefono)">Contactar</button>
                         </div>
                     </div>
                 </div>
