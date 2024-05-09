@@ -769,7 +769,7 @@ thead tr th {
 }
 
 .container-suggestions li:hover {
-  background-color: #f2f2f2;
+  background-color: var(--body-bg-color);
 }
 
 @media screen and (max-width: 1212px) {

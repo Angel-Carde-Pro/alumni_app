@@ -125,12 +125,12 @@ export class ComunidadComponent {
     this.filtersVisible = !this.filtersVisible;
     const filtersToggle = document.querySelector('.filters-toggle');
 
-    this.searchTerm = "";
-    this.updateFilteredGraduadosList();
-    
     if (filtersToggle) {
       filtersToggle.classList.toggle('is-open');
       filtersToggle.classList.remove('active');
+      this.deleteFilters();
+      this.searchTerm = "";
+      this.updateFilteredGraduadosList();
     }
   }
 
@@ -198,9 +198,11 @@ export class ComunidadComponent {
           (typeof value === 'string' && value.toLowerCase().includes(this.searchTerm.toLowerCase()))
         );
       });
+
     } else {
       this.filteredGraduadosList = this.graduadosList;
     }
+    this.resultadoNumber = this.filteredGraduadosList.length;
   }
 
   clearSearchTerm(): void {
