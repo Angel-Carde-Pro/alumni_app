@@ -292,13 +292,13 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>NOMBRES</th>
-                                <th>APELLIDOS</th>
-                                <th>TELEFONO</th>
-                                <th>FECHA DE GRADUACIÓN</th>
-                                <th>CIUDAD</th>
-                                <th>CARRERAS</th>
-                                <th>ESTADO CIVIL</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Teléfono</th>
+                                <th>Fecha de graduación</th>
+                                <th>Ciudad</th>
+                                <th>Carreras</th>
+                                <th>Estado civil</th>
                                 <th class="text-center w-100px">Acciones</th>
                                 <th class="text-center w-100px">Contactar</th>
                             </tr>
@@ -354,16 +354,17 @@
             <div class="searched-jobs" *ngIf="!isTable">
                 <p class="mt-2" *ngIf="!anyResult"><b>Graduados encontrados:</b> {{resultadoNumber}} </p>
                 <div class="job-cards">
-                    <div class="job-card" *ngFor="let graduadoItem of filteredGraduadosList;">
+                    <div class="job-card" *ngFor="let graduadoItem of filteredGraduadosList;" (click)="showGraduadoDetails(graduadoItem)" data-bs-toggle="modal"
+                                data-bs-target="#m_modal_4">
                         <div class="perfil">
                             <img src="{{graduadoItem.usuario.urlImagen}}" alt="Foto De Perfil">
                             <span>{{ graduadoItem.usuario.persona.primerNombre }} {{
                                 graduadoItem.usuario.persona.apellidoPaterno}}</span>
                         </div>
                         <div class="job-card-title"><b>Fecha de graduación:</b> {{graduadoItem.anioGraduacion}}</div>
-                        <div class="job-card-subtitle">
+                        <!-- <div class="job-card-subtitle">
                             --- AQUI VA LA DESCRIPCIÓN ---
-                        </div>
+                        </div> -->
                         <div class="job-detail-buttons">
                             <button class="search-buttons detail-button">{{graduadoItem.ciudad.nombre
                                 + " - " + graduadoItem.ciudad.provincia.nombre + " - " +

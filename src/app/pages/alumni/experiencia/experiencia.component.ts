@@ -74,8 +74,9 @@ export class ExperienciaComponent {
 
   // Note: Cargar la tabla con los datos despues de que la vista se haya inicializado
   ngOnInit(): void {
-    const columnTitles = ['#', 'Cargo', 'Duración', 'Institucion', 'Actividad', 'Area de trabajo'];
+    const columnTitles = ['#', 'Cargo', 'Duración', 'Institución', 'Actividad', 'Área de trabajo'];
     this.dtoptions = this.dtService.setupDtOptions(columnTitles, 'Buscar experiencia...');
+
     // Para inicializar los dropdowns de los filtros de la tabla.
     this.filterService.initializeDropdowns('filterTable', columnTitles,);
     this.loadData();
